@@ -145,3 +145,12 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/static/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'qq1564649449@163.com'
+# 授权码，不是密码
+EMAIL_HOST_PASSWORD = 'qq1564649449'
+EMAIL_FROM = 'qq1564649449@163.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+

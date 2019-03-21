@@ -15,8 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import include
+from django.conf.urls import include, url
+from .views import *
 
 urlpatterns = [
-
+    url(r'^org_list/$', org_list, name='org_list'),
 ]
