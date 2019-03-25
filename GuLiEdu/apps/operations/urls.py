@@ -15,8 +15,35 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import include
+from django.conf.urls import include, url
+from .views import *
 
 urlpatterns = [
-
+    url(r'^user_ask/$', user_ask, name='user_ask'),
+    # ajax请求路径里面不用放参数
+    url(r'^user_love/$', user_love, name='user_love'),
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

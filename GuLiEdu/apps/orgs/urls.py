@@ -20,4 +20,8 @@ from .views import *
 
 urlpatterns = [
     url(r'^org_list/$', org_list, name='org_list'),
+    url(r'^org_detail/(\d+)/$', org_detail, name='org_detail'),
+    url(r'^org_detail_course/(\d+)/$', org_detail_course, name='org_detail_course'),
+    url(r'^org_detail_desc/(\d+)/$', org_detail_desc, name='org_detail_desc'),
+    url(r'^org_detail_teachers/(\d+)/$', org_detail_teachers, name='org_detail_teachers'),
 ]

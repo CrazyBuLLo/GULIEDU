@@ -16,7 +16,7 @@ def user_register(request):
     if request.method == 'GET':
         # 这里实例化forms类，目的不是为了验证，而是为了使用验证码
         user_register_form = UserRegisterForm()
-        return render(request, 'register.html', {
+        return render(request, 'users/register.html', {
             'user_register_form': user_register_form
         })
     else:
@@ -27,7 +27,7 @@ def user_register(request):
 
             user_list = UserProfile.objects.filter(Q(username=email) | Q(email=email))
             if user_list:
-                return render(request, 'register.html', {
+                return render(request, 'users/register.html', {
                     'msg': '用户已经存在'
                 })
             else:
@@ -40,14 +40,14 @@ def user_register(request):
                 return HttpResponse('请尽快前往您的邮箱激活，否则无法登录')
                 # return redirect(reverse('index'))
         else:
-            return render(request, 'register.html', {
+            return render(request, 'users/register.html', {
                 'user_register_form': user_register_form
             })
 
 
 def user_login(request):
     if request.method == 'GET':
-        return render(request, 'login.html')
+        return render(request, 'users/login.html')
     else:
         user_login_form = UserLoginForm(request.POST)
         if user_login_form.is_valid():
@@ -66,7 +66,7 @@ def user_login(request):
                     'msg': '邮箱或密码有误'
                 })
         else:
-            return render(request, 'login.html', {
+            return render(request, 'users/login.html', {
                 'user_login_form': user_login_form
             })
 
@@ -98,7 +98,7 @@ def user_forget(request):
     if request.method == 'GET':
         # 这里实例化forms类，目的不是为了验证，而是为了使用验证码
         user_forget_form = UserForgetForm()
-        return render(request, 'forgetpwd.html', {
+        return render(request, 'users/forgetpwd.html', {
             'user_forget_form': user_forget_form
         })
     else:
@@ -110,11 +110,11 @@ def user_forget(request):
                 send_email_code(email, 2)
                 return HttpResponse('请尽快去邮箱重置密码')
             else:
-                return render(request, 'forgetpwd.html', {
+                return render(request, 'users/forgetpwd.html', {
                     'msg': '用户不存在'
                 })
         else:
-            return render(request, 'forgetpwd.html', {
+            return render(request, 'users/forgetpwd.html', {
                 'user_forget_form': user_forget_form
             })
 
@@ -122,7 +122,7 @@ def user_forget(request):
 def user_reset(request, code):
     if code:
         if request.method == 'GET':
-            return render(request, 'password_reset.html', {
+            return render(request, 'users/password_reset.html', {
                 'code': code
             })
         else:
@@ -146,12 +146,12 @@ def user_reset(request, code):
                     else:
                         pass
                 else:
-                    return render(request, 'password_reset.html', {
+                    return render(request, 'users/password_reset.html', {
                         'msg': '两次输入的密码不一致',
                         'code': code
                     })
             else:
-                return render(request, 'password_reset.html', {
+                return render(request, 'users/password_reset.html', {
                     'code': code,
                     'user_reset_form': user_reset_form
                 })

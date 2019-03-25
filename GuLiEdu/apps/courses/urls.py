@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import include
+from django.conf.urls import include, url
+from .views import *
 
 urlpatterns = [
-
+    url(r'^course_list/$', course_list, name='course_list'),
+    url(r'^course_detail/(\d+)/$', course_detail, name='course_detail'),
 ]
