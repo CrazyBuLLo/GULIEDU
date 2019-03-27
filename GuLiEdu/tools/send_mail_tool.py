@@ -35,3 +35,8 @@ def send_email_code(email, send_type):
         send_title = '谷粒教育重置密码'
         send_body = '请点击以下链接进行重置您的账号：\n http://127.0.0.1:8000/users/user_reset/' + code
         send_mail(send_title, send_body, EMAIL_FROM, [email])
+
+    if send_type == 3:
+        send_title = '谷粒教育修改邮箱'
+        send_body = '您的验证码是:' + code
+        send_mail(send_title, send_body, EMAIL_FROM, [email])

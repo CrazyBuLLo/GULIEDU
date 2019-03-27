@@ -54,16 +54,20 @@
                                     {% endif %}
                                 </span></li>
                                 <li class="piclist"><span class="pram word4">学习用户：</span>
-
-                                    <span class="pic"><img width="40" height="40" src="../images/touxiang.jpg"/></span>
-
+                                    {% for usercourse in course.usercourse_set.all|slice:':6' %}
+                                    <span class="pic"><img width="40" height="40" src="{{ MEDIA_URL }}{{ usercourse.study_man.image }}"/></span>
+                                    {% endfor %}
                                 </li>
                             </ul>
                             <div class="btns">
                                 <div class="btn colectgroupbtn" id="jsLeftBtn">
-                                    收藏
+                                    {% if lovecourse %}
+                                        取消收藏
+                                    {% else %}
+                                        收藏
+                                    {% endif %}
                                 </div>
-                                <div class="buy btn"><a style="color: white" href="course-video.html">开始学习</a></div>
+                                <div class="buy btn"><a style="color: white" href="{% url 'courses:course_video' course_id %}">开始学习</a></div>
                             </div>
                         </div>
                     </div>
@@ -82,7 +86,11 @@
                         </a>
                         <div class="btn  notlogin
 					     " data-favid="14" id="jsRightBtn">
-                            已收藏
+                            {% if loveorg %}
+                                取消收藏
+                            {% else %}
+                                收藏
+                            {% endif %}
                         </div>
                         <div class="clear">
                             <ul>
@@ -148,6 +156,54 @@
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(function () {
+
+            $('#jsLeftBtn').click(function () {
+                var loveid = {{ course.id }};
+                var lovetype = 2;
+                $.ajax({
+                    type:'GET',
+                    url:'{% url 'operations:user_love' %}',
+                    data:{
+                        loveid:loveid,
+                        lovetype:lovetype
+                    },
+                    success:function (callback) {
+                        if (callback.status == 'ok') {
+                            $('#jsLeftBtn').text(callback.msg)
+                        } else {
+                            alert(callback.msg)
+                        }
+                    }
+                })
+            })
+
+
+            $('#jsRightBtn').click(function () {
+                var loveid = {{ course.orginfo.id }};
+                var lovetype = 1;
+                $.ajax({
+                    type:'GET',
+                    url:'{% url 'operations:user_love' %}',
+                    data:{
+                        loveid:loveid,
+                        lovetype:lovetype
+                    },
+                    success:function (callback) {
+                        if (callback.status == 'ok') {
+                            $('#jsRightBtn').text(callback.msg)
+                        } else {
+                            alert(callback.msg)
+                        }
+                    }
+                })
+            })
+        })
+    </script>
 {% endblock %}
 
 

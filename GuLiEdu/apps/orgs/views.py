@@ -2,6 +2,8 @@ from django.shortcuts import render
 from .models import *
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from operations.models import UserLove
+from courses.models import *
+
 
 # Create your views here.
 def org_list(request):
@@ -48,6 +50,9 @@ def org_list(request):
 def org_detail(request, org_id):
     if org_id:
         org = OrgInfo.objects.filter(id=int(org_id))[0]
+
+        org.click_num += 1
+        org.save()
 
         # 在返回页面数据的时候，需要返回收藏这个机构的状态，根据状态让模板页面显示收藏还是取消收藏，而不能让页面固定显示收藏
         lovestatus = False
@@ -125,3 +130,57 @@ def org_detail_teachers(request, org_id):
             'lovestatus': lovestatus
         })
 
+def teacher_list(request):
+    teachers = TeacherInfo.objects.all()
+    sort_teachers = teachers.order_by('-love_num')[:3]
+
+    sort = request.GET.get('sort', '')
+    if sort:
+        teachers = teachers.order_by('-' + sort)
+
+    # 分页代码，固定的
+    pagenum = request.GET.get('pagenum', '')
+    pa = Paginator(teachers, 3)
+    try:
+        pages = pa.page(pagenum)
+    except PageNotAnInteger:
+        pages = pa.page(1)
+    except EmptyPage:
+        pages = pa.page(pa.num_pages)
+
+    return render(request, 'orgs/teachers-list.html', {
+        'teachers': teachers,
+        'pages': pages,
+        'sort': sort,
+        'sort_teachers': sort_teachers
+    })
+
+def teacher_detail(request, teacher_id):
+    if teacher_id:
+        teacher = TeacherInfo.objects.filter(id=teacher_id)[0]
+        sort_teachers = TeacherInfo.objects.filter(work_company_id=teacher.work_company_id).order_by('-love_num')[:3]
+
+        course_list = CourseInfo.objects.filter(teacherinfo_id=teacher_id)
+
+        teacher.click_num += 1
+        teacher.save()
+
+        loveteacher = False
+        loveorg = False
+        if request.user.is_authenticated:
+            love = UserLove.objects.filter(love_man=request.user, love_id=int(teacher_id), love_type=3, love_status=True)
+            if love:
+                loveteacher = True
+            love1 = UserLove.objects.filter(love_man=request.user, love_id=int(teacher.work_company_id), love_type=1, love_status=True)
+            if love1:
+                loveorg = True
+
+
+
+        return render(request, 'orgs/teacher-detail.html', {
+            'teacher': teacher,
+            'course_list': course_list,
+            'sort_teachers': sort_teachers,
+            'loveteacher': loveteacher,
+            'loveorg': loveorg
+        })

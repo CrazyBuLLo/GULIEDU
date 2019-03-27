@@ -24,4 +24,6 @@ urlpatterns = [
     url(r'^org_detail_course/(\d+)/$', org_detail_course, name='org_detail_course'),
     url(r'^org_detail_desc/(\d+)/$', org_detail_desc, name='org_detail_desc'),
     url(r'^org_detail_teachers/(\d+)/$', org_detail_teachers, name='org_detail_teachers'),
+    url(r'^teacher_list/$', teacher_list, name='teacher_list'),
+    url(r'^teacher_detail/(\d+)/$', teacher_detail, name='teacher_detail'),
 ]

@@ -20,3 +20,7 @@ class UserAskForm(forms.ModelForm):
             return phone
         else:
             raise forms.ValidationError('手机号码不合法')
+
+class UserCommentForm(forms.Form):
+    course = forms.IntegerField(required=True)
+    content = forms.CharField(required=True, min_length=1, max_length=300)
