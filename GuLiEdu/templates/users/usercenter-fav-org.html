@@ -19,9 +19,9 @@
         <div class="personal_des permessage">
             <div class="head">
                 <ul class="tab_header messagehead">
-                    <li class="active"><a href="usercenter-fav-course.html">课程机构</a></li>
-                    <li><a href="usercenter-fav-teacher.html">授课教师 </a></li>
-                    <li><a href="usercenter-fav-course.html">公开课程</a></li>
+                    <li class="active"><a href="{% url 'users:user_loveorg' %}">课程机构</a></li>
+                    <li><a href="{% url 'users:user_loveteacher' %}">授课教师 </a></li>
+                    <li><a href="{% url 'users:user_lovecourse' %}">公开课程</a></li>
                 </ul>
             </div>
             <div class="messagelist">
@@ -44,8 +44,8 @@
                                 <img src="{% static 'images/gold.png' %}"/>
 
                             </div>
-                            <span class="c8 clear">{{ org.cityinfo_id }}</span>
-                            <div class="delete jsDeleteFav_org" data-favid="1"></div>
+                            <span class="c8 clear">{{ org.address }}</span>
+                            <div class="delete jsDeleteFav_org" data-favid="{{ org.id }}" id="delete"></div>
                         </dd>
                     </dl>
                     {% endfor %}
@@ -54,6 +54,36 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block user %}{% endblock %}
+{% block js1 %}
+    <script type="text/javascript">
+        $(function () {
+            $('.delete').click(function () {
+                {# prop()用来取元素自带属性的值或者设置值 attr用来取元素自定义的属性的值或者设置值，如果是设置值，attr后要再加一个参数，this表示当前点击的对象 #}
+                var loveid = $(this).attr('data-favid');
+                var lovetype = 1;
+                var obj = $(this);
+                $.ajax({
+                    {# 传过去的信息不需要用户输入，用get就可以 #}
+                    type:'GET',
+                    url:'{% url 'operations:user_deletelove' %}',
+                    data:{
+                        loveid:loveid,
+                        lovetype:lovetype
+                    },
+                    success:function (callback) {
+                        if (callback.status == 'ok') {
+                            {# 拿到点击对象的祖先节点当中有类名是des的对象 #}
+                            obj.parents('.des').remove()
+                        } else {
+                            alert(callback.msg)
+                        }
+                    }
+                })
+            })
+        })
+    </script>
 {% endblock %}
 
 

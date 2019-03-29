@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^user_ask/$', user_ask, name='user_ask'),
     # ajax请求路径里面不用放参数
     url(r'^user_love/$', user_love, name='user_love'),
+    url(r'^user_deletelove/$', user_deletelove, name='user_deletelove'),
     url(r'^user_comment/$', user_comment, name='user_comment'),
 ]
 

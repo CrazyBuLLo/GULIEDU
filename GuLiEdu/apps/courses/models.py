@@ -18,6 +18,7 @@ class CourseInfo(models.Model):
     course_need = models.CharField(max_length=100, verbose_name='课程须知')
     teacher_tell = models.CharField(max_length=100, verbose_name='老师教导')
 
+    is_banner = models.BooleanField(default=False, verbose_name='是否轮播')
     orginfo = models.ForeignKey(OrgInfo, verbose_name='所属机构', on_delete=models.CASCADE)
     teacherinfo = models.ForeignKey(TeacherInfo, verbose_name='所属讲师', on_delete=models.CASCADE)
 

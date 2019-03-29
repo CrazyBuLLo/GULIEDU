@@ -91,3 +91,21 @@ def user_comment(request):
         return JsonResponse({'status': 'ok', 'msg': '评论成功'})
     else:
         return JsonResponse({'status': 'fail', 'msg': '评论失败'})
+
+
+def user_deletelove(request):
+    loveid = request.GET.get('loveid', '')
+    lovetype = request.GET.get('lovetype', '')
+    if loveid and lovetype:
+        userlove_list = UserLove.objects.filter(love_man=request.user, love_type=int(lovetype), love_id=int(loveid), love_status=True)
+        if userlove_list:
+            userlove = userlove_list[0]
+            userlove.love_status = False
+            userlove.save()
+            return JsonResponse({'status': 'ok', 'msg': '删除收藏成功'})
+        else:
+            return JsonResponse({'status': 'ok', 'msg': '删除收藏失败'})
+    else:
+        return JsonResponse({'status': 'ok', 'msg': '删除收藏失败'})
+
+

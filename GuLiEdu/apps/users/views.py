@@ -1,19 +1,29 @@
 from django.shortcuts import render, redirect, reverse, HttpResponse
 from .forms import UserRegisterForm, UserLoginForm, UserForgetForm, UserResetForm, UserChangeImageForm, UserChangeInfoForm, UserChangeEmailForm, UserResetEmailForm
-from .models import UserProfile, EmailVerifyCode
+from .models import UserProfile, EmailVerifyCode, BannerInfo
 from django.db.models import Q
 from django.contrib.auth import authenticate, logout, login
 from courses.models import CourseInfo
 from tools.send_mail_tool import send_email_code
 from django.http import JsonResponse
 from datetime import datetime
-from operations.models import UserCourse, UserLove
-from orgs.models import OrgInfo
+from operations.models import UserCourse, UserLove, UserMessage
+from orgs.models import OrgInfo, TeacherInfo
 
 
 # Create your views here.
 def index(request):
-    return render(request, 'index.html')
+    all_banners = BannerInfo.objects.all().order_by('-add_time')[:5]
+
+    all_courses = CourseInfo.objects.all().order_by('-add_time')
+
+    all_orgs = OrgInfo.objects.all().order_by('-add_time')
+
+    return render(request, 'index.html', {
+        'all_banners': all_banners,
+        'all_courses': all_courses,
+        'all_orgs': all_orgs
+    })
 
 
 def user_register(request):
@@ -62,6 +72,11 @@ def user_login(request):
             if user:
                 if user.is_start:
                     login(request, user)
+                    # 当登陆成功，就加入一条消息
+                    a = UserMessage()
+                    a.message_man = user.id
+                    a.message_content = '欢迎登录'
+                    a.save()
                     return redirect(reverse('index'))
                 else:
                     return HttpResponse('请去您的邮箱激活，否则无法登陆')
@@ -251,11 +266,51 @@ def user_course(request):
 
 
 def user_loveorg(request):
-    userorg_list = UserLove.objects.filter(love_man=request.user, love_type=1)
+    userorg_list = UserLove.objects.filter(love_man=request.user, love_type=1, love_status=True)
     orgid_list = [userorg.love_id for userorg in userorg_list]
     # org_list = [OrgInfo.objects.filter(id=love_id) for love_id in orgid_list]
     org_list = OrgInfo.objects.filter(id__in=orgid_list)
 
     return render(request, 'users/usercenter-fav-org.html', {
-        'org_list': org_list
+        'org_list': org_list,
     })
+
+def user_lovecourse(request):
+    usercourse_list = UserLove.objects.filter(love_man=request.user, love_type=2, love_status=True)
+    coureseid_list = [usercourse.love_id for usercourse in usercourse_list]
+    course_list = CourseInfo.objects.filter(id__in=coureseid_list)
+
+    return render(request, 'users/usercenter-fav-course.html', {
+        'course_list': course_list,
+    })
+
+
+def user_message(request):
+    message_list = UserMessage.objects.filter(message_man=request.user.id).order_by('-add_time')
+    return render(request, 'users/usercenter-message.html', {
+        'message_list': message_list
+    })
+
+
+def user_loveteacher(request):
+    userteacher_list = UserLove.objects.filter(love_man=request.user, love_type=3, love_status=True)
+    teacherid_list = [userteacher.love_id for userteacher in userteacher_list]
+    teacher_list = TeacherInfo.objects.filter(id__in=teacherid_list)
+
+    return render(request, 'users/usercenter-fav-teacher.html', {
+        'teacher_list': teacher_list,
+    })
+
+
+def user_deletemessage(request):
+    msg_id = request.GET.get('msg_id', '')
+    if msg_id:
+        message_list = UserMessage.objects.filter(id=int(msg_id))
+        if message_list:
+            message_list[0].message_status = True
+            message_list[0].save()
+            return JsonResponse({'status': 'ok', 'msg': '已读'})
+        else:
+            return JsonResponse({'status': 'fail', 'msg': '读取失败'})
+    else:
+        return JsonResponse({'status': 'fail', 'msg': '读取失败'})

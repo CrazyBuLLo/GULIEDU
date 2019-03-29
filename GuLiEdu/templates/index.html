@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block title %}
     首页 - 谷粒教育
 {% endblock %}
@@ -9,36 +10,13 @@
 				<div class="fl">
 					<div class="imgslide">
 						<ul class="imgs">
-
+                        {% for banner in all_banners %}
                             <li>
                                     <a href="http://www.imooc.com">
-                                        <img width="1200" height="478" src="../images/banner1.jpg" />
+                                        <img width="1200" height="478" src="{{ MEDIA_URL }}{{ banner.image }}" />
                                     </a>
                                 </li>
-
-                            <li>
-                                    <a href="http://www.atguigu.com">
-                                        <img width="1200" height="478" src="../images/banner2.jpg" />
-                                    </a>
-                                </li>
-
-                            <li>
-                                    <a href="http://www.atguigu.com">
-                                        <img width="1200" height="478" src="../images/banner3.jpg" />
-                                    </a>
-                                </li>
-
-                            <li>
-                                    <a href="http://www.atguigu.com">
-                                        <img width="1200" height="478" src="../images/banner4.jpg" />
-                                    </a>
-                                </li>
-
-                            <li>
-                                    <a href="http://www.atguigu.com">
-                                        <img width="1200" height="478" src="../images/banner5.jpg" />
-                                    </a>
-                                </li>
+                        {% endfor %}
 
 
 						</ul>
@@ -56,19 +34,19 @@
 		<div class="wp">
 			<ul class="feature">
 				<li class="feature1">
-					<img class="pic" src="../images/feature5.png"/>
+					<img class="pic" src="{% static 'images/feature5.png' %}"/>
 					<p class="center">专业权威</p>
 				</li>
 				<li class="feature2">
-					<img class="pic" src="../images/feature5.png"/>
+					<img class="pic" src="{% static 'images/feature5.png' %}"/>
 					<p class="center">课程最新</p>
 				</li>
 				<li class="feature3">
-					<img class="pic" src="../images/feature5.png"/>
+					<img class="pic" src="{% static 'images/feature5.png' %}"/>
 					<p class="center">名师授课</p>
 				</li>
 				<li class="feature4">
-					<img class="pic" src="../images/feature5.png"/>
+					<img class="pic" src="{% static 'images/feature5.png' %}"/>
 					<p class="center">数据真实</p>
 				</li>
 			</ul>
@@ -81,9 +59,9 @@
 				<h1>公开课程</h1>
 				<div class="module1 eachmod">
 					<div class="module1_1 left">
-						<img width="228" height="614" src="../images/module5_1.jpg"/>
+						<img width="228" height="614" src="{% static 'images/module5_1.jpg' %}"/>
 						<p class="fisrt_word">名师授课<br/>专业权威</p>
-						<a class="more" href="course-list.html">查看更多课程 ></a>
+						<a class="more" href="{% url 'courses:course_list' %}">查看更多课程 ></a>
 					</div>
 					<div class="right group_list">
 						<div class="module1_2 box">

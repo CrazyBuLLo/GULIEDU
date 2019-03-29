@@ -17,6 +17,12 @@ class UserProfile(AbstractUser):
     def __str__(self):
         return self.username
 
+    # 通过定义类方法来解决消息数量问题，在页面中调用request.user.get_msg_counter
+    def get_msg_counter(self):
+        from operations.models import UserMessage
+        counter = UserMessage.objects.filter(message_man=self.id, message_status=False).count()
+        return counter
+
     class Meta:
         verbose_name = '用户信息'
         verbose_name_plural = verbose_name
