@@ -103,6 +103,8 @@
                     success:function (callback) {
                         if (callback.status == 'ok') {
                             $('#love').text(callback.msg)
+                        } else if (callback.status == 'nologin') {
+                            window.location.href = '{% url 'users:user_login' %}'
                         } else {
                             alert(callback.msg)
                         }

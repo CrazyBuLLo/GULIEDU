@@ -151,6 +151,29 @@
 <script src="{% static 'js/plugins/jquery.scrollLoading.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/deco-common.js' %}" type="text/javascript"></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#jsSearchBtn').click(function () {
+            var selectoption = $('#jsSelectOption').attr('data-value');
+            var keyword = $('#search_keywords').val();
+            var url = ''
+
+            if (selectoption == 'org') {
+                url= '{% url 'orgs:org_list' %}'
+            } else if (selectoption == 'course') {
+                url = '{% url 'courses:course_list' %}'
+            } else {
+                url = '{% url 'orgs:teacher_list' %}'
+            }
+
+            url = url + '?keyword=' + keyword;
+            window.location.href = url
+        })
+    })
+</script>
+
+
 {% block js %}{% endblock %}
 
 

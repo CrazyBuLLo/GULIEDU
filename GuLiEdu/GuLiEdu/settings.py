@@ -18,6 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 将我们自己定义的包加入到pyhton搜寻环境变量当中
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -26,9 +27,9 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 SECRET_KEY = 'javr7e4^g2&$!1#@mopjnbwf8*yjx2-21&9eyq-bu^#6e(*s!x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -46,7 +47,8 @@ INSTALLED_APPS = [
     'operations.apps.OperationsConfig',
     'xadmin',
     'crispy_forms',
-    'captcha'
+    'captcha',
+    'DjangoUeditor'
 ]
 
 AUTH_USER_MODEL = 'users.UserProfile'
@@ -138,7 +140,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-
+# 这个路径只在测试环境下起作用
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]

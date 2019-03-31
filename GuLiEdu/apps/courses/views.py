@@ -2,11 +2,19 @@ from django.shortcuts import render
 from .models import *
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from operations.models import UserLove, UserCourse
+from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from tools.decorators import login_decorator
 
 # Create your views here.
 def course_list(request):
     all_courses = CourseInfo.objects.all()
     recommend_courses = all_courses.order_by('-add_time')[:3]
+
+
+    keyword = request.GET.get('keyword', '')
+    if keyword:
+        all_courses = all_courses.filter(Q(name__icontains=keyword) | Q(desc__icontains=keyword) | Q(detail__icontains=keyword))
 
     sort = request.GET.get('sort', '')
     if sort:
@@ -27,7 +35,8 @@ def course_list(request):
         'all_courses': all_courses,
         'recommend_courses': recommend_courses,
         'pages': pages,
-        'sort': sort
+        'sort': sort,
+        'keyword': keyword
     })
 
 
@@ -61,6 +70,8 @@ def course_detail(request, course_id):
 
         })
 
+
+@login_decorator
 def course_video(request, course_id):
     if course_id:
 

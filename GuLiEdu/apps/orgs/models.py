@@ -1,5 +1,7 @@
 from django.db import models
 from datetime import datetime
+from DjangoUeditor.models import UEditorField
+
 
 # Create your models here.
 class CityInfo(models.Model):
@@ -21,10 +23,14 @@ class OrgInfo(models.Model):
     study_num = models.IntegerField(default=0, verbose_name='学习人数')
     address = models.CharField(max_length=200, verbose_name='机构地址')
     desc = models.CharField(max_length=200, verbose_name='机构简介')
-    detail = models.TextField(verbose_name='机构详情')
+    detail = UEditorField(verbose_name='机构详情', width=700, height=400, toolbars='full', imagePath='ueditor/images/',
+                                filePath='ueditor/files/',
+                                upload_settings={'imageMaxSizing': 1024000},
+                                default='')
     love_num = models.IntegerField(default=0, verbose_name='收藏数')
     click_num = models.IntegerField(default=0, verbose_name='点击数')
-    category = models.CharField(choices=(('pxjg', '培训机构'), ('gx', '高校'), ('gr', '个人')), max_length=10, verbose_name='机构类别')
+    category = models.CharField(choices=(('pxjg', '培训机构'), ('gx', '高校'), ('gr', '个人')), max_length=10,
+                                verbose_name='机构类别')
     cityinfo = models.ForeignKey(CityInfo, verbose_name='所在城市', on_delete=models.CASCADE)
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
 
@@ -34,6 +40,7 @@ class OrgInfo(models.Model):
     class Meta:
         verbose_name = '机构信息'
         verbose_name_plural = verbose_name
+
 
 class TeacherInfo(models.Model):
     image = models.ImageField(upload_to='teacher/', max_length=200, verbose_name='讲师头像')
@@ -54,13 +61,3 @@ class TeacherInfo(models.Model):
     class Meta:
         verbose_name = '讲师信息'
         verbose_name_plural = verbose_name
-
-
-
-
-
-
-
-
-
-

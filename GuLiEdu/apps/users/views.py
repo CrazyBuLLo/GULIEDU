@@ -9,21 +9,40 @@ from django.http import JsonResponse
 from datetime import datetime
 from operations.models import UserCourse, UserLove, UserMessage
 from orgs.models import OrgInfo, TeacherInfo
+from django.views.generic import View
 
+
+class IndexView(View):
+    def get(self, request):
+        all_banners = BannerInfo.objects.all().order_by('-add_time')[:5]
+
+        banner_courses = CourseInfo.objects.filter(is_banner=True)[:3]
+        all_courses = CourseInfo.objects.filter(is_banner=False)[:6]
+
+        all_orgs = OrgInfo.objects.all().order_by('-add_time')[:15]
+
+        return render(request, 'index.html', {
+            'all_banners': all_banners,
+            'banner_courses': banner_courses,
+            'all_courses': all_courses,
+            'all_orgs': all_orgs
+        })
 
 # Create your views here.
-def index(request):
-    all_banners = BannerInfo.objects.all().order_by('-add_time')[:5]
-
-    all_courses = CourseInfo.objects.all().order_by('-add_time')
-
-    all_orgs = OrgInfo.objects.all().order_by('-add_time')
-
-    return render(request, 'index.html', {
-        'all_banners': all_banners,
-        'all_courses': all_courses,
-        'all_orgs': all_orgs
-    })
+# def index(request):
+#     all_banners = BannerInfo.objects.all().order_by('-add_time')[:5]
+#
+#     banner_courses = CourseInfo.objects.filter(is_banner=True)[:3]
+#     all_courses = CourseInfo.objects.filter(is_banner=False)[:6]
+#
+#     all_orgs = OrgInfo.objects.all().order_by('-add_time')[:15]
+#
+#     return render(request, 'index.html', {
+#         'all_banners': all_banners,
+#         'banner_courses': banner_courses,
+#         'all_courses': all_courses,
+#         'all_orgs': all_orgs
+#     })
 
 
 def user_register(request):
@@ -59,10 +78,10 @@ def user_register(request):
             })
 
 
-def user_login(request):
-    if request.method == 'GET':
+class UserLoginView(View):
+    def get(self, request):
         return render(request, 'users/login.html')
-    else:
+    def post(self, request):
         user_login_form = UserLoginForm(request.POST)
         if user_login_form.is_valid():
             email = user_login_form.cleaned_data['email']
@@ -77,7 +96,11 @@ def user_login(request):
                     a.message_man = user.id
                     a.message_content = '欢迎登录'
                     a.save()
-                    return redirect(reverse('index'))
+                    url = request.COOKIES.get('url', '/')
+
+                    ret = redirect(url)
+                    ret.delete_cookie('url')
+                    return ret
                 else:
                     return HttpResponse('请去您的邮箱激活，否则无法登陆')
             else:
@@ -88,6 +111,40 @@ def user_login(request):
             return render(request, 'users/login.html', {
                 'user_login_form': user_login_form
             })
+
+# def user_login(request):
+#     if request.method == 'GET':
+#         return render(request, 'users/login.html')
+#     else:
+#         user_login_form = UserLoginForm(request.POST)
+#         if user_login_form.is_valid():
+#             email = user_login_form.cleaned_data['email']
+#             password = user_login_form.cleaned_data['password']
+#
+#             user = authenticate(username=email, password=password)
+#             if user:
+#                 if user.is_start:
+#                     login(request, user)
+#                     # 当登陆成功，就加入一条消息
+#                     a = UserMessage()
+#                     a.message_man = user.id
+#                     a.message_content = '欢迎登录'
+#                     a.save()
+#                     url = request.COOKIES.get('url', '/')
+#
+#                     ret = redirect(url)
+#                     ret.delete_cookie('url')
+#                     return ret
+#                 else:
+#                     return HttpResponse('请去您的邮箱激活，否则无法登陆')
+#             else:
+#                 return redirect(request, 'login.html', {
+#                     'msg': '邮箱或密码有误'
+#                 })
+#         else:
+#             return render(request, 'users/login.html', {
+#                 'user_login_form': user_login_form
+#             })
 
 def user_logout(request):
     logout(request)
@@ -314,3 +371,10 @@ def user_deletemessage(request):
             return JsonResponse({'status': 'fail', 'msg': '读取失败'})
     else:
         return JsonResponse({'status': 'fail', 'msg': '读取失败'})
+
+
+def handler_404(request, **kwargs):
+    return render(request, 'handler_404.html')
+
+def handler_500(request):
+    return render(request, 'handler_500.html')

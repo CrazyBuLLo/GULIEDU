@@ -17,15 +17,20 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
 import xadmin
-from users.views import index
+from users.views import IndexView
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
     url(r'^captcha/', include('captcha.urls')),
-    url('^users/', include(('users.urls', 'users'), namespace='users')),
-    url('^courses/', include(('courses.urls', 'courses'), namespace='courses')),
-    url('^orgs/', include(('orgs.urls', 'orgs'), namespace='orgs')),
-    url('^operations/', include(('operations.urls', 'operations'), namespace='operations')),
-    url(r'^$', index, name='index')
+    url(r'^ueditor/', include('DjangoUeditor.urls')),
+    url(r'^users/', include(('users.urls', 'users'), namespace='users')),
+    url(r'^courses/', include(('courses.urls', 'courses'), namespace='courses')),
+    url(r'^orgs/', include(('orgs.urls', 'orgs'), namespace='orgs')),
+    url(r'^operations/', include(('operations.urls', 'operations'), namespace='operations')),
+    url(r'^$', IndexView.as_view(), name='index')
 ]
+
+
+handler404 = 'users.views.handler_404'
+handler500 = 'users.views.handler_500'

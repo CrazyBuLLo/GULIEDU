@@ -3,6 +3,7 @@ from .forms import UserAskForm, UserCommentForm
 from django.http import JsonResponse
 from .models import *
 from orgs.models import *
+from tools.decorators import login_decorator
 
 # Create your views here.
 def user_ask(request):
@@ -27,6 +28,7 @@ def user_ask(request):
         return JsonResponse({'status': 'fail', 'msg': '咨询失败'})
 
 
+@login_decorator
 def user_love(request):
     loveid = request.GET.get('loveid', '')
     lovetype = request.GET.get('lovetype', '')
