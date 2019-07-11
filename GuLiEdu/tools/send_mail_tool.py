@@ -2,6 +2,8 @@ from users.models import EmailVerifyCode
 from random import randrange
 from django.core.mail import send_mail
 from GuLiEdu.settings import EMAIL_FROM
+# from GuLiEdu.GuLiEdu.settings import EMAIL_FROM
+
 
 def get_random_code(code_length):
     code_source = '1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'

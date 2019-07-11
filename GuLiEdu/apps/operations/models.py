@@ -19,7 +19,7 @@ class UserAsk(models.Model):
 
 
 class UserLove(models.Model):
-    love_man = models.ForeignKey(UserProfile, verbose_name='收藏用户', on_delete=models.CASCADE)
+    love_man = models.ForeignKey(UserProfile, verbose_name='收藏用户')
     love_id = models.IntegerField(verbose_name='收藏id')
     love_type = models.IntegerField(choices=((1, 'org'), (2, 'course'), (3, 'teacher')), verbose_name='收藏类别')
     love_status = models.BooleanField(default=False, verbose_name='收藏状态')
@@ -34,8 +34,8 @@ class UserLove(models.Model):
 
 
 class UserCourse(models.Model):
-    study_man = models.ForeignKey(UserProfile, verbose_name='学习用户', on_delete=models.CASCADE)
-    study_course = models.ForeignKey(CourseInfo, verbose_name='学习课程', on_delete=models.CASCADE)
+    study_man = models.ForeignKey(UserProfile, verbose_name='学习用户')
+    study_course = models.ForeignKey(CourseInfo, verbose_name='学习课程')
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
 
     def __str__(self):
@@ -48,8 +48,8 @@ class UserCourse(models.Model):
         verbose_name_plural = verbose_name
 
 class UserComment(models.Model):
-    comment_man = models.ForeignKey(UserProfile, verbose_name='评论用户', on_delete=models.CASCADE)
-    comment_course = models.ForeignKey(CourseInfo, verbose_name='评论课程', on_delete=models.CASCADE)
+    comment_man = models.ForeignKey(UserProfile, verbose_name='评论用户')
+    comment_course = models.ForeignKey(CourseInfo, verbose_name='评论课程')
     comment_content = models.CharField(max_length=300, verbose_name='评论内容')
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
 

@@ -176,7 +176,9 @@
                         if (callback.status == 'ok') {
                             $('#jsLeftBtn').text(callback.msg)
                         } else {
-                            alert(callback.msg)
+                            alert(callback.msg);
+                            {#alert('请先登录');#}
+                            {#window.location.href = '/users/user_login'#}
                         }
                     }
                 })

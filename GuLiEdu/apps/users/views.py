@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.contrib.auth import authenticate, logout, login
 from courses.models import CourseInfo
 from tools.send_mail_tool import send_email_code
+# from send_mail_tool import send_email_code
 from django.http import JsonResponse
 from datetime import datetime
 from operations.models import UserCourse, UserLove, UserMessage

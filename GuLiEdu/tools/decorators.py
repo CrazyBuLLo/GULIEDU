@@ -9,7 +9,7 @@ def login_decorator(func):
         else:
             if request.is_ajax():
                 # ajax请求不能用重定向,登陆后只能返回首页。
-                return JsonResponse({'status': 'nologin'})
+                return JsonResponse({'status': 'nologin', 'msg': '请登录'})
 
             # 拿到目前访问的完整url，不只是路径部分
             url = request.get_full_path()
